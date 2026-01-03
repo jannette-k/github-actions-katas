@@ -48,7 +48,7 @@ jobs:
           # To report GitHub Actions status checks
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DISABLE_ERRORS: true      
- Docker-image:
+  Docker-image:
     runs-on: ubuntu-latest
     needs: [Build]
     permissions:
@@ -65,7 +65,7 @@ jobs:
       run: bash ci/build-docker.sh
     - name: push docker
       run: bash ci/push-docker.sh
-     Component-test:
+  Component-test:
     runs-on: ubuntu-latest
     needs: Docker-image
     steps:
@@ -86,4 +86,4 @@ jobs:
         name: code
         path: .
     - name: Execute performance test
-      run: bash ci/performance-test.sh   
+      run: bash ci/performance-test.sh
