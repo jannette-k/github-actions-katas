@@ -182,6 +182,54 @@ It seems like we have some linting errors in our code. As this is not a python/b
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DISABLE_ERRORS: true  
 ```
+### Your workflow failed because:
+
+Running inside a Gradle container broke upload-artifact.
+
+You uploaded the entire repo instead of just source/build files.
+
+You skipped checkout in the linting job.
+
+### Updated Code
+name: Main workflow
+on: push
+
+jobs:
+  Build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 11
+        uses: actions/setup-java@v4
+        with:
+          java-version: '11'
+      - name: Build application
+        run: ci/build-app.sh
+      - name: Test
+        run: ci/unit-test-app.sh
+      - name: Upload source
+        uses: actions/upload-artifact@v4
+        with:
+          name: code
+          path: src/
+
+  Linting:
+    runs-on: ubuntu-latest
+    needs: Build
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download code
+        uses: actions/download-artifact@v4
+        with:
+          name: code
+          path: src/
+      - name: Run super-linter
+        uses: super-linter/super-linter/slim@v7
+        env:
+          DEFAULT_BRANCH: main
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
 
 Push that up to your repository and see that the linting now passes, even though we have errors in our code.
 
