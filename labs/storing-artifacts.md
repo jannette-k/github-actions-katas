@@ -191,7 +191,8 @@ You uploaded the entire repo instead of just source/build files.
 You skipped checkout in the linting job.
 
 ### Updated Code
-name: Main workflow
+<pre>
+  name: Main workflow
 on: push
 
 jobs:
@@ -229,7 +230,7 @@ jobs:
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-
+</pre>
 
 Push that up to your repository and see that the linting now passes, even though we have errors in our code.
 
